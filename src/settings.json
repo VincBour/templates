@@ -1,0 +1,16 @@
+{
+    "fctemplates.structures": [
+        {
+            "name": "DefaultName",
+            "structure": [
+                {
+                    "name": "<DefaultName>.ts",
+                    "template": "DefaultName"
+                }
+            ]
+        }
+    ],
+    "fctemplates.file": {
+        "DefaultName": "<DefaultName>"
+    }
+}

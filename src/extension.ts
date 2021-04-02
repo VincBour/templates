@@ -1,6 +1,8 @@
 // The module 'vscode' contains the VS Code extensibility API
 // Import the module and reference it with the alias vscode in your code below
 import * as vscode from 'vscode';
+import { folderCreatorStructure } from './commands/folderCreatorStructure';
+import { showInfo } from './utils/vscode';
 
 // this method is called when your extension is activated
 // your extension is activated the very first time the command is executed
@@ -10,17 +12,17 @@ export function activate(context: vscode.ExtensionContext) {
 	// This line of code will only be executed once when your extension is activated
 	console.log('Congratulations, your extension "templates" is now active!');
 
-	// The command has been defined in the package.json file
-	// Now provide the implementation of the command with registerCommand
-	// The commandId parameter must match the command field in package.json
-	let disposable = vscode.commands.registerCommand('templates.helloWorld', () => {
-		// The code you place here will be executed every time your command is executed
-
-		// Display a message box to the user
-		vscode.window.showInformationMessage('Hello World from Templates!');
-	});
-
-	context.subscriptions.push(disposable);
+	const templateFolderPath = context.asAbsolutePath('.templates');
+	console.log('templateFolderPath', templateFolderPath);
+	let createFolder = vscode.commands.registerCommand(
+		"templates.folderCreation",
+		(resource) => {
+			showInfo('templates folderCreation is working');
+			return folderCreatorStructure(resource, templateFolderPath);
+		}
+		
+	);
+	context.subscriptions.push(createFolder);
 }
 
 // this method is called when your extension is deactivated

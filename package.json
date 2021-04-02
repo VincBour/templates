@@ -1,5 +1,5 @@
 {
-  "name": "templates",
+	"name": "templates",
 	"displayName": "Templates",
 	"description": "This extension help with creating custom folder templates",
 	"version": "0.0.1",
@@ -10,16 +10,25 @@
 		"Other"
 	],
 	"activationEvents": [
-        "onCommand:templates.helloWorld"
+		"onCommand:templates.folderCreator"
 	],
 	"main": "./dist/extension.js",
 	"contributes": {
 		"commands": [
 			{
-				"command": "templates.helloWorld",
-				"title": "Hello World"
+				"command": "templates.folderCreator",
+				"title": "Create new Folder with Template"
 			}
-		]
+		],
+		"menus": {
+			"explorer/context": [
+				{
+					"when": "explorerResourceIsFolder",
+					"command": "templates.folderCreator",
+					"group": "2_workspace@500"
+				}
+			]
+		}
 	},
 	"scripts": {
 		"vscode:prepublish": "yarn run package",
