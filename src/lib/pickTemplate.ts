@@ -1,9 +1,24 @@
 import { FolderType } from "../types";
+import { showError } from "../utils/vscode";
 
 export const pickTemplate = (templates: FolderType[], name: string = "default") => {
-    //* TODO find template with name
+    let directoryStructure: FolderType | undefined;
+    //*  find template with name
+    if (name !== "default") {
+        directoryStructure = templates.find(t => t.name === name);
+        if (!directoryStructure) {
+            showError("Could'nt find selected structure, please try again");
+            return null;
+        }
+        return directoryStructure;
+    }
+    //*  find template with "default"
+    directoryStructure = templates[0];
 
-    //* TODO find template with "default"
+    if (!directoryStructure) {
+        showError("Something went wrong, could'nt find folder structure");
+        return null;
+    }
 
-    return {} as FolderType;
+    return directoryStructure;
 };

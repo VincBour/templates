@@ -15,7 +15,7 @@ export function activate(context: vscode.ExtensionContext) {
 	const templateFolderPath = context.asAbsolutePath('.templates');
 	console.log('templateFolderPath', templateFolderPath);
 	let createFolder = vscode.commands.registerCommand(
-		"templates.folderCreation",
+		"templates.folderCreator",
 		(resource) => {
 			showInfo('templates folderCreation is working');
 			return folderCreatorStructure(resource, templateFolderPath);

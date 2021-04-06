@@ -1,7 +1,7 @@
 {
     "fctemplates.structures": [
         {
-            "name": "DefaultName",
+            "name": "TestName",
             "structure": [
                 {
                     "name": "<DefaultName>.ts",
