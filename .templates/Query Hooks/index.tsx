@@ -1,0 +1,1 @@
+export { [FCName] } from './[FCName]';

@@ -1,6 +1,7 @@
 export type FolderType = {
     name: string;
     structure: FileSettingsType[];
+    withDirectory?: boolean;
 };
 
 export type FileSettingsType = {

@@ -1,11 +1,11 @@
 import { Dirent, PathLike, readdirSync, readFileSync } from "fs";
 import { Uri } from "vscode";
-import { TemplatesChannel } from "../../outpuChannel/TemplatesChannel";
+import { channel } from "../../outpuChannel/TemplatesChannel";
 import { FolderContentType } from "../../types";
 import { showError } from "../vscode";
+import { getFileContent } from "./getFileContent";
 
 export const getFolderContent = (uri: Uri): FolderContentType[] => {
-    const channel = TemplatesChannel.getChannel();
     try {
         const files = readdirSync(uri.fsPath, { withFileTypes: true });
         const allPath: FolderContentType[] = files.reduce((prev: FolderContentType[], curr: Dirent) => {
@@ -24,20 +24,5 @@ export const getFolderContent = (uri: Uri): FolderContentType[] => {
         showError("Something went wrong getting Folder content");
         channel.appendLine(`Something went wrong getting folder content, ${error}`);
         return [];
-    }
-};
-
-const getFileContent = (path: PathLike) => {
-    const channel = TemplatesChannel.getChannel();
-
-    try {
-        const content = readFileSync(path, {
-            encoding: "utf8"
-        });
-        return content;
-    } catch (error) {
-        showError("Something went wrong getting File content");
-        channel.appendLine(`Something went wrong getting file content, ${error}`);
-        return null;
     }
 };

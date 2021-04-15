@@ -1,4 +1,3 @@
-import { Uri } from "vscode";
 import { relative } from 'path';
 import { FileSettingsType, FolderContentType } from "../../types";
 

@@ -1,17 +1,18 @@
+import * as fs from 'fs';
+import * as path from 'path';
 import { Uri, window, workspace } from "vscode";
+import { channel } from '../outpuChannel/TemplatesChannel';
 import { getWorkspaceUri } from "../utils/path";
 import { showError } from "../utils/vscode";
 
 export const getTargetUri = async (targetDirectory: Uri | string | undefined) => {
-    //* get workspace uri
+    
     let workspaceUri: Uri | undefined = await getWorkspaceUri();
-    console.log("workspaceUri", workspaceUri);
     if (!workspaceUri) {
         showError('Workspace not found');
         return;
     }
     
-    //* manage if resource is String
     if (typeof targetDirectory === 'string') {
         if (targetDirectory === '__current') {
             return getParentDirectoryPath();
@@ -20,8 +21,36 @@ export const getTargetUri = async (targetDirectory: Uri | string | undefined) =>
         return Uri.parse(`${workspaceUri}/${targetDirectory}`);
     }
 
-    //* manage if resource is undefined
     if (!targetDirectory && workspace.workspaceFolders) {
+
+        const actualDocumentScope = window.activeTextEditor?.document;
+
+        let newFolder = '';
+        if (actualDocumentScope) {   
+            const folderPath = actualDocumentScope?.uri.path;
+            const isDirectory = isFolderExist(folderPath!);
+            if (!isDirectory) {
+                const nameFile = path.basename(folderPath!);
+                const replaceValue = '/'+nameFile;
+                newFolder = folderPath?.replace(replaceValue, '')!;
+            }
+
+            const inThisDirectory = await window.showInputBox({
+                placeHolder: 'Y or N',
+                prompt: `Do you want to create the component in this folder: ${path.basename(newFolder)} ? Y/N`,
+                validateInput: (value: string) => {
+                    if (!value || value.trim().length === 0 || (value.toUpperCase() !== 'Y' && value.toUpperCase() !== 'N')) {
+                        return 'Cannot set empty or not valid value (Y or N)';
+                    }
+                    return null;
+                }
+            });
+            
+            if (inThisDirectory === 'Y' || inThisDirectory === 'y') {
+                return Uri.parse(newFolder);
+            }
+        }
+        
         const directoryPath = await window.showInputBox({
             placeHolder: "Enter the relative path to project root where your folder should be created"
         });
@@ -31,7 +60,6 @@ export const getTargetUri = async (targetDirectory: Uri | string | undefined) =>
     return targetDirectory;
 };
 
-// TODO To be tested
 function getParentDirectoryPath() {
     const activeTextEditor = window.activeTextEditor;
     const document = activeTextEditor?.document;
@@ -41,9 +69,16 @@ function getParentDirectoryPath() {
     if (!currentDirectoryUri) {
         return null;
     }
-    console.log("currentDirectoryUri", currentDirectoryUri);
+    channel.appendLine(`current directory: ${currentDirectoryUri}`);
     return Uri.parse(currentDirectoryUri, true);
 }
 
-
+function isFolderExist(path: string) {
+    try {
+        fs.readdirSync(path);
+        return true;
+    } catch (error) {
+        return false;
+    }
+}
 

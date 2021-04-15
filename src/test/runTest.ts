@@ -9,7 +9,7 @@ async function main() {
 		const extensionDevelopmentPath = path.resolve(__dirname, '../../');
 		const testWorkspace = path.resolve(
 			__dirname,
-			'../../testworkspace',
+			'../../testworkspace/workspace',
 		  );
 		// The path to test runner
 		// Passed to --extensionTestsPath

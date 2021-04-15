@@ -1,9 +1,10 @@
+import { channel } from "../outpuChannel/TemplatesChannel";
 import { FolderType } from "../types";
 import { showError } from "../utils/vscode";
 
 export const pickTemplate = (templates: FolderType[], name: string = "default") => {
     let directoryStructure: FolderType | undefined;
-    //*  find template with name
+    
     if (name !== "default") {
         directoryStructure = templates.find(t => t.name === name);
         if (!directoryStructure) {
@@ -12,7 +13,7 @@ export const pickTemplate = (templates: FolderType[], name: string = "default") 
         }
         return directoryStructure;
     }
-    //*  find template with "default"
+    
     directoryStructure = templates[0];
 
     if (!directoryStructure) {

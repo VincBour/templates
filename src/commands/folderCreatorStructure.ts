@@ -1,55 +1,47 @@
 import { Uri } from "vscode";
 import { createStructure } from "../actions/createStructure";
 import { getComponentName, getConfiguration, getTargetUri, getTemplates, pickTemplate, pickTemplateName } from "../lib";
-import { TemplatesChannel } from "../outpuChannel/TemplatesChannel";
-import { FolderType } from "../types";
+import { channel } from "../outpuChannel/TemplatesChannel";
 import { showError, showInfo } from "../utils/vscode";
 
 export const folderCreatorStructure = async (resource: Uri | string | undefined, templatesFolderPath: string) => {
-    const channel = TemplatesChannel.getChannel();
     
-    console.log('folderCreatorStructure', resource, templatesFolderPath);
-    //* getParentFolder From resource
     const targetUri = await getTargetUri(resource);
-    channel.appendLine('get target uri ok');
-    console.log('targetUri', targetUri);
+    channel.appendLine('get target uri => ok');
 
-    //* get Configuration of structures from settings
     const configurations = getConfiguration("structures") || [];
-    channel.appendLine('get structure configuration ok');
-    console.log('configurations', configurations);
+    channel.appendLine('get structure configuration => ok');
 
-    //* get All Templates available
-    const templatesAvailable = getTemplates(templatesFolderPath).concat(configurations as FolderType[]);
-    console.log('templatesAvailable', templatesAvailable);
+    const templatesAvailable = getTemplates(templatesFolderPath);
     if (!templatesAvailable.length) {
         showError("No configured Folder Template Found !");
     }
+    channel.appendLine('get folder template => ok');
 
-    //*  choose the template
     const templateName = await pickTemplateName(templatesAvailable);
-    console.log('templateName', templateName);
     if (!templateName) {
         showError("Something went wrong, No template name selected !!");
     }
+    channel.appendLine(`pick template name => ${templateName}`);
+
+    const configurationTemplate = configurations.find(c => c.name === templateName);
 
     const template = pickTemplate(templatesAvailable, templateName);
-    console.log('template', template);
     if (!template) {
-        showError('Something went wrong, No template selcted !!');
+        showError('Something went wrong, No template selected !!');
     }
+    channel.appendLine(`pick template => ok`);
 
-    //* choose Name for the structure
     const name = await getComponentName();
-    console.log('name', name);
-    //*  manage message error if name is undefined
+    if (!name) {
+        showError('Something went wrong, No Component Name Selected !!');
+    }
+    channel.appendLine(`get Component Name => ${name}`);
 
-    //*  create structure
     await createStructure(
         name!,
         template?.structure!,
-        targetUri!
+        targetUri!,
+        configurationTemplate?.withDirectory!
     );
-
-    showInfo("Creation Folder Done");
 };
