@@ -18,8 +18,8 @@ suite('Extension Test Suite', () => {
 		assert.strictEqual(result?.[0].name, "DefaultName");
 		assert.deepStrictEqual(result?.[0].structure,[
 			{
-				"name": "<DefaultName>.ts",
-				"template": "DefaultName"
+				"name": "DefaultName",
+				"withDirectory": true
 			}
 		] );
 	});

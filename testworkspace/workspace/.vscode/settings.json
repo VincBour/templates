@@ -4,13 +4,10 @@
             "name": "TestName",
             "structure": [
                 {
-                    "name": "<DefaultName>.ts",
-                    "template": "DefaultName"
+                    "name": "DefaultName",
+                    "withDirectory": true
                 }
             ]
         }
-    ],
-    "fctemplates.file": {
-        "DefaultName": "<DefaultName>"
-    }
+    ]
 }

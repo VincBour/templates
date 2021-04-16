@@ -17,7 +17,7 @@
 		"commands": [
 			{
 				"command": "templates.folderCreator",
-				"title": "Create new Folder with Template"
+				"title": "Create new File/Folder with Template"
 			}
 		],
 		"menus": {
